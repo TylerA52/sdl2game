@@ -25,13 +25,10 @@ int main(int argc, char* argv[]){
 
     Entity player(4, 0, 4, 7, sprites);
     
-    // Entity entities[3] = {Entity(1, 0, 0, 0, tiles),
-                          //Entity(1, 0, 25, 25, tiles),
-                          //Entity(1, 0, 50, 50, tiles)};
 
-    std::vector<Entity> entities =  {Entity(1, 0, 0, 0, tiles),
-                                      Entity(1, 0, 25, 25, tiles),
-                                      Entity(1, 0, 50, 50, tiles)};
+    std::vector<Entity> npcmodels =  {Entity(10, 0, 8, 2, sprites),
+                                      Entity(0, 4, 8, 8, sprites),
+                                      Entity(5, 5, 9, 8, sprites)};
     
 
     bool isRunning = true;
@@ -46,15 +43,19 @@ int main(int argc, char* argv[]){
                     break;
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == SDLK_w) {
+                        player = Entity (3, 3, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() - 1);
                     }
                     if (event.key.keysym.sym == SDLK_a) {
+                        player = Entity (5, 1, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() - 1);
                                 }
                     if (event.key.keysym.sym == SDLK_s) {
+                        player = Entity (4, 0, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() + 1);
                                 }
                     if (event.key.keysym.sym == SDLK_d) {
+                        player = Entity (5, 2, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() + 1);
                                 }                       
                     break;
@@ -65,9 +66,9 @@ int main(int argc, char* argv[]){
      
         tilemap.renderMap(window);
 
-        //for (Entity& i : entities){
-          // window.render(i);
-        //}
+        for (Entity& i : npcmodels){
+           window.render(i);
+        }
 
         window.render(player);
         window.display();
