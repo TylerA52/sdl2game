@@ -3,6 +3,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include "render_window.h"
+#include "entity.h"
 
 class Tilemap {
     public:
