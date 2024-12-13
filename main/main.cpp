@@ -46,8 +46,17 @@ int main(int argc, char* argv[]){
                     break;
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == SDLK_w) {
-                        //entity movement
+                        player.setY(player.getY() - 1);
                     }
+                    if (event.key.keysym.sym == SDLK_a) {
+                        player.setX(player.getX() - 1);
+                                }
+                    if (event.key.keysym.sym == SDLK_s) {
+                        player.setY(player.getY() + 1);
+                                }
+                    if (event.key.keysym.sym == SDLK_d) {
+                        player.setX(player.getX() + 1);
+                                }                       
                     break;
             }
         }
