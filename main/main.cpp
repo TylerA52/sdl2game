@@ -20,7 +20,10 @@ int main(int argc, char* argv[]){
     SDL_Texture* tiles = window.loadTexture("/home/tyler/Desktop/sdl2game/Images/basictiles.png");
     
     Entity player(4, 0, 100, 100, sprites);
-
+    
+    Entity entities[3] = {Entity(1, 0, 0, 0, tiles),
+                          Entity(1, 0, 25, 25, tiles),
+                          Entity(1, 0, 50, 50, tiles)};
 
     bool isRunning = true;
 
@@ -41,6 +44,10 @@ int main(int argc, char* argv[]){
         }
 
         window.clear();
+        
+        for (int i = 0; i < 3; i++){
+            window.render(entities[i]);
+        }
         window.render(player);
         window.display();
 
