@@ -40,7 +40,7 @@ const int tilesPerRow = 8;
             int s_x = tileIndex % tilesPerRow;
             int s_y = tileIndex / tilesPerRow;
 
-            Entity tileEntity(s_x, s_y, x * 16, y * 16, tileSet);
+            Entity tileEntity(s_x, s_y, x, y, tileSet);
             window.render(tileEntity);
         }
     }

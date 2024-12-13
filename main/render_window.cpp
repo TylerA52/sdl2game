@@ -36,17 +36,18 @@ void RenderWindow::render(Entity& p_entity){
     SDL_Rect src;
     src.x = p_entity.getCurrentFrame().x;
     src.y = p_entity.getCurrentFrame().y;
-    src.w = p_entity.getCurrentFrame().h;
-    src.h = p_entity.getCurrentFrame().w;
+    src.w = p_entity.getCurrentFrame().w;
+    src.h = p_entity.getCurrentFrame().h;
 
     SDL_Rect dst;
-    dst.x = p_entity.getX() * 4;
-    dst.y = p_entity.getY() * 4;
+    dst.x = p_entity.getX() * 4 * 16;
+    dst.y = p_entity.getY() * 4 * 16;
     dst.w = p_entity.getCurrentFrame().w * 4;
     dst.h = p_entity.getCurrentFrame().h * 4;
 
     SDL_RenderCopy(renderer, p_entity.getTex(), &src, &dst);
 }
+
 
 void RenderWindow::display(){
     SDL_RenderPresent(renderer);

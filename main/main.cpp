@@ -2,8 +2,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <cstdlib>
+#include <vector>
 #include "render_window.h"
 #include "entity.h"
+#include "tilemap.h"
 
 int main(int argc, char* argv[]){
     int windowWidth = 1024;
@@ -19,11 +21,18 @@ int main(int argc, char* argv[]){
     SDL_Texture* sprites = window.loadTexture("/home/tyler/Desktop/sdl2game/Images/characters.png");
     SDL_Texture* tiles = window.loadTexture("/home/tyler/Desktop/sdl2game/Images/basictiles.png");
     
-    Entity player(4, 0, 100, 100, sprites);
+    Tilemap tilemap(16, 12, tiles);
+
+    Entity player(4, 0, 4, 7, sprites);
     
-    Entity entities[3] = {Entity(1, 0, 0, 0, tiles),
-                          Entity(1, 0, 25, 25, tiles),
-                          Entity(1, 0, 50, 50, tiles)};
+    // Entity entities[3] = {Entity(1, 0, 0, 0, tiles),
+                          //Entity(1, 0, 25, 25, tiles),
+                          //Entity(1, 0, 50, 50, tiles)};
+
+    std::vector<Entity> entities =  {Entity(1, 0, 0, 0, tiles),
+                                      Entity(1, 0, 25, 25, tiles),
+                                      Entity(1, 0, 50, 50, tiles)};
+    
 
     bool isRunning = true;
 
@@ -44,10 +53,13 @@ int main(int argc, char* argv[]){
         }
 
         window.clear();
-        
-        for (int i = 0; i < 3; i++){
-            window.render(entities[i]);
-        }
+     
+        tilemap.renderMap(window);
+
+        //for (Entity& i : entities){
+          // window.render(i);
+        //}
+
         window.render(player);
         window.display();
 
