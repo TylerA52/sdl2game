@@ -19,9 +19,18 @@ float Entity::getY(){
     return y;
 }
 
+int Entity::getWidth(){
+    return currentFrame.w;
+}
+
+int Entity::getHeight(){
+    return currentFrame.h;
+}
+
 void Entity::setX(float newX){
     x = newX;
 }
+
 void Entity::setY(float newY){
     y = newY;
 }
