@@ -8,7 +8,7 @@
 #include "tilemap.h"
 
 
-bool checkCollision(Entity& entity1, Entity& entity2);
+bool checkCollision(Entity& entity1, std::vector<Entity>& entities);
 
 
 int main(int argc, char* argv[]){
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
     Tilemap tilemap(16, 12, tiles);
 
     Entity player(4, 0, 4, 7, sprites);
-    Entity testNPC(5, 5, 11, 10, sprites); //testing collision against this npc
+
     
     std::vector<Entity> objects = {Entity(3, 8, 5, 6, tiles),
                                    Entity(7, 3, 12, 3, tiles)};
@@ -49,31 +49,31 @@ int main(int argc, char* argv[]){
                     isRunning = false;
                     break;
                 case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_w) {
+                    if (event.key.keysym.sym == SDLK_UP) {
                         player = Entity (3, 3, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() - 1);
-                        if (checkCollision(player, testNPC)){
+                        if (checkCollision(player, npcmodels)|| checkCollision(player, objects)){ // only works on my arrays, what about map tiles?
                             player.setY(player.getY() + 1);
                         }
                     }
-                    if (event.key.keysym.sym == SDLK_a) {
+                    if (event.key.keysym.sym == SDLK_LEFT) {
                         player = Entity (5, 1, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() - 1);
-                        if (checkCollision(player, testNPC)){
+                        if (checkCollision(player, npcmodels) || checkCollision(player, objects)){
                             player.setX(player.getX() + 1);
                         }
                     }
-                    if (event.key.keysym.sym == SDLK_s) {
+                    if (event.key.keysym.sym == SDLK_DOWN) {
                         player = Entity (4, 0, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() + 1);
-                        if (checkCollision(player, testNPC)){
+                        if (checkCollision(player, npcmodels) || checkCollision(player, objects)){
                             player.setY(player.getY() - 1);
                         }
                     }
-                    if (event.key.keysym.sym == SDLK_d) {
+                    if (event.key.keysym.sym == SDLK_RIGHT) {
                         player = Entity (5, 2, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() + 1);
-                        if (checkCollision(player, testNPC)){
+                        if (checkCollision(player, npcmodels) || checkCollision(player, objects)){
                             player.setX(player.getX() - 1);
                         }
                     }
@@ -93,7 +93,7 @@ int main(int argc, char* argv[]){
         for (Entity& i : objects){
             window.render(i);
         }
-        window.render(testNPC);
+
         window.render(player);
         window.display();
 
@@ -107,22 +107,28 @@ int main(int argc, char* argv[]){
 
 
 
-bool checkCollision(Entity& entity1, Entity& entity2){
+bool checkCollision(Entity& entity1, std::vector<Entity>& entities){
     
     int x1 = entity1.getX() * 4 * 16;
     int y1 = entity1.getY() * 4 * 16;
     int width1 = entity1.getWidth() * 4;
     int height1 = entity1.getHeight() * 4;
 
-    int x2 = entity2.getX() * 4 * 16;
-    int y2 = entity2.getY() * 4 * 16;
-    int width2 = entity2.getWidth() * 4;
-    int height2 = entity2.getHeight()  * 4;
+    for (Entity& entity2 : entities) {
+        int x2 = entity2.getX() * 4 * 16;
+        int y2 = entity2.getY() * 4 * 16;
+        int width2 = entity2.getWidth() * 4;
+        int height2 = entity2.getHeight()  * 4;
 
-    if (x1 + width1 <= x2 || x1 >= x2 + width2 ||
-        y1 + height1 <= y2 || y1 >= y2 + height2) {
-        return false;
+        if (x1 + width1 <= x2 || x1 >= x2 + width2 ||
+            y1 + height1 <= y2 || y1 >= y2 + height2) {
+
+            continue;
+        }
+        else {
+            return true;
+        }
     }
-    return true;
+    return false;
 }
 
