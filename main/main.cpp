@@ -7,6 +7,10 @@
 #include "entity.h"
 #include "tilemap.h"
 
+
+bool checkCollision(Entity& entity1, Entity& entity2);
+
+
 int main(int argc, char* argv[]){
     int windowWidth = 1024;
     int windowHeight = 768;
@@ -24,11 +28,14 @@ int main(int argc, char* argv[]){
     Tilemap tilemap(16, 12, tiles);
 
     Entity player(4, 0, 4, 7, sprites);
+    Entity testNPC(5, 5, 11, 11, sprites); //testing collision against this npc
     
+    std::vector<Entity> objects = {Entity(3, 8, 5, 6, tiles),
+                                   Entity(7, 3, 12, 3, tiles)};
 
     std::vector<Entity> npcmodels =  {Entity(10, 0, 8, 2, sprites),
-                                      Entity(0, 4, 8, 8, sprites),
-                                      Entity(5, 5, 9, 8, sprites)};
+                                      Entity(0, 4, 9, 8, sprites),
+                                      Entity(5, 5, 10, 8, sprites)};
     
 
     bool isRunning = true;
@@ -57,8 +64,17 @@ int main(int argc, char* argv[]){
                     if (event.key.keysym.sym == SDLK_d) {
                         player = Entity (5, 2, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() + 1);
-                                }                       
+                                } 
+                    
+                    if (checkCollision(player, testNPC)) {
+                        std::cout << "Collision detected!\n";
+                    }
+                    else{
+                        std::cout << "No collision\n";
+                    }
+
                     break;
+                    
             }
         }
 
@@ -70,6 +86,10 @@ int main(int argc, char* argv[]){
            window.render(i);
         }
 
+        for (Entity& i : objects){
+            window.render(i);
+        }
+        window.render(testNPC);
         window.render(player);
         window.display();
 
@@ -80,3 +100,25 @@ int main(int argc, char* argv[]){
 
     return 0;
 }
+
+
+
+bool checkCollision(Entity& entity1, Entity& entity2){
+    
+    int x1 = entity1.getX();
+    int y1 = entity1.getY();
+    int width1 = entity1.getWidth();
+    int height1 = entity1.getHeight();
+
+    int x2 = entity2.getX();
+    int y2 = entity2.getY();
+    int width2 = entity2.getWidth();
+    int height2 = entity2.getHeight();
+
+    if (x1 + width1 <= x2 || x1 >= x2 + width2 ||
+        y1 + height1 <= y2 || y1 >= y2 + height2) {
+        return false;
+    }
+    return true;
+}
+    
