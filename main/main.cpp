@@ -52,26 +52,30 @@ int main(int argc, char* argv[]){
                     if (event.key.keysym.sym == SDLK_w) {
                         player = Entity (3, 3, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() - 1);
+                        if (checkCollision(player, testNPC)){
+                            player.setY(player.getY() + 1);
+                        }
                     }
-
                     if (event.key.keysym.sym == SDLK_a) {
                         player = Entity (5, 1, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() - 1);
+                        if (checkCollision(player, testNPC)){
+                            player.setX(player.getX() + 1);
+                        }
                     }
                     if (event.key.keysym.sym == SDLK_s) {
                         player = Entity (4, 0, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() + 1);
+                        if (checkCollision(player, testNPC)){
+                            player.setY(player.getY() - 1);
+                        }
                     }
                     if (event.key.keysym.sym == SDLK_d) {
                         player = Entity (5, 2, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() + 1);
-                    }
-
-                    if (checkCollision(player, testNPC)) {
-                        std::cout << "Collision detected!\n";
-                    }
-                    else{
-                        std::cout << "No collision\n";
+                        if (checkCollision(player, testNPC)){
+                            player.setX(player.getX() - 1);
+                        }
                     }
 
                     break; 
@@ -121,4 +125,4 @@ bool checkCollision(Entity& entity1, Entity& entity2){
     }
     return true;
 }
-    
+
