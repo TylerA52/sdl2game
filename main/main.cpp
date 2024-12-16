@@ -9,7 +9,7 @@
 #include "tilemap.h"
 #include "text.h"
 
-
+bool IsMouseOverButton(int mouseX, int mouseY, textRenderer& text);
 bool checkCollision(Entity& entity1, std::vector<Entity>& entities);
 
 int main(int argc, char* argv[]){
@@ -62,6 +62,7 @@ int main(int argc, char* argv[]){
                     isRunning = false;
                     break;
                 case SDL_KEYDOWN:
+                    // Movement
                     if (event.key.keysym.sym == SDLK_UP) {
                         player = Entity (3, 3, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() - 1);
@@ -95,14 +96,28 @@ int main(int argc, char* argv[]){
                         }
                     }
                     
-                    // Turning on pause screen bool
-                    if (event.key.keysym.sym == SDLK_p){
-                        pause = true;
+                    // Turning on and off pause screen bool
+                    if (event.key.keysym.sym == SDLK_ESCAPE){
+                        if (pause){
+                            pause = false;
+                        }
+                        else {
+                            pause = true;
+                        }
                     }
 
                     // Testing a location to go to a new map
                     if (player.getX() == 0 && player.getY() == 9){
                         std::cout << "arrived\n";
+                    }
+                case SDL_MOUSEBUTTONDOWN:
+
+                    if (event.type == SDL_MOUSEBUTTONDOWN){
+                        int mouseX, mouseY;
+                        SDL_GetMouseState(&mouseX, &mouseY);
+                        if (IsMouseOverButton(mouseX, mouseY, renderText)){
+                            std::cout << "Button clicked\n";
+                        }
                     }
 
                     break; 
@@ -110,6 +125,7 @@ int main(int argc, char* argv[]){
         }
 
         window.clear();
+
         if (map1){
             tilemap.renderMap(window);
         }
@@ -126,8 +142,9 @@ int main(int argc, char* argv[]){
 
         // Pause screen
         if (pause){
-            textRenderer.renderText("Pause", color, 400, 350);
+            textRenderer.renderText("Pause", color, 365, 325);
         }
+
 
         window.display();
 
@@ -139,6 +156,8 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
+
+// TO DO: Put these in header/implementation files
 
 bool checkCollision(Entity& entity1, std::vector<Entity>& entities){
     
@@ -166,3 +185,8 @@ bool checkCollision(Entity& entity1, std::vector<Entity>& entities){
 }
 
 
+
+bool IsMouseOverButton(int mouseX, int mouseY, textRenderer& text){
+    return mouseX >= text.x && mouseX <= text.x + text.w &&
+           mouseY >= text.y && mouseY <= text.y + text.h;
+}
