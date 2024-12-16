@@ -1,15 +1,16 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <cstdlib>
 #include <vector>
 #include "render_window.h"
 #include "entity.h"
 #include "tilemap.h"
+#include "text.h"
 
 
 bool checkCollision(Entity& entity1, std::vector<Entity>& entities);
-
 
 int main(int argc, char* argv[]){
     int windowWidth = 1024;
@@ -19,12 +20,23 @@ int main(int argc, char* argv[]){
         windowWidth = std::atoi(argv[1]);
         windowHeight = std::atoi(argv[2]);
     }
+    
+    if (TTF_Init() == -1) {
+        std::cerr << "SDL ttf could not initialize, error: " << TTF_GetError();
+        SDL_Quit();
+        return 1;
+    }
 
     RenderWindow window("GAME", windowWidth, windowHeight);
+
+    SDL_Renderer* renderer = window.getRenderer();
 
     SDL_Texture* sprites = window.loadTexture("/home/tyler/Desktop/sdl2game/Images/characters.png");
     SDL_Texture* tiles = window.loadTexture("/home/tyler/Desktop/sdl2game/Images/basictiles.png");
     
+    textRenderer textRenderer(renderer, "/home/tyler/Desktop/sdl2game/Images/ARCADECLASSIC.TTF", 100);
+    SDL_Color color = {255, 255, 255};
+
     Tilemap tilemap(16, 12, tiles);
 
     Entity player(4, 0, 4, 7, sprites);
@@ -37,7 +49,8 @@ int main(int argc, char* argv[]){
                                       Entity(0, 4, 9, 8, sprites),
                                       Entity(5, 5, 10, 8, sprites)};
     
-
+    bool map1 = true;
+    bool pause = false;
     bool isRunning = true;
 
     SDL_Event event;
@@ -52,6 +65,7 @@ int main(int argc, char* argv[]){
                     if (event.key.keysym.sym == SDLK_UP) {
                         player = Entity (3, 3, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() - 1);
+
                         if (checkCollision(player, npcmodels)|| checkCollision(player, objects)){ // only works on my arrays, what about map tiles?
                             player.setY(player.getY() + 1);
                         }
@@ -59,6 +73,7 @@ int main(int argc, char* argv[]){
                     if (event.key.keysym.sym == SDLK_LEFT) {
                         player = Entity (5, 1, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() - 1);
+
                         if (checkCollision(player, npcmodels) || checkCollision(player, objects)){
                             player.setX(player.getX() + 1);
                         }
@@ -66,6 +81,7 @@ int main(int argc, char* argv[]){
                     if (event.key.keysym.sym == SDLK_DOWN) {
                         player = Entity (4, 0, player.getX(), player.getY(), sprites);
                         player.setY(player.getY() + 1);
+
                         if (checkCollision(player, npcmodels) || checkCollision(player, objects)){
                             player.setY(player.getY() - 1);
                         }
@@ -73,9 +89,20 @@ int main(int argc, char* argv[]){
                     if (event.key.keysym.sym == SDLK_RIGHT) {
                         player = Entity (5, 2, player.getX(), player.getY(), sprites);
                         player.setX(player.getX() + 1);
+
                         if (checkCollision(player, npcmodels) || checkCollision(player, objects)){
                             player.setX(player.getX() - 1);
                         }
+                    }
+                    
+                    // Turning on pause screen bool
+                    if (event.key.keysym.sym == SDLK_p){
+                        pause = true;
+                    }
+
+                    // Testing a location to go to a new map
+                    if (player.getX() == 0 && player.getY() == 9){
+                        std::cout << "arrived\n";
                     }
 
                     break; 
@@ -83,8 +110,9 @@ int main(int argc, char* argv[]){
         }
 
         window.clear();
-     
-        tilemap.renderMap(window);
+        if (map1){
+            tilemap.renderMap(window);
+        }
 
         for (Entity& i : npcmodels){
            window.render(i);
@@ -95,6 +123,12 @@ int main(int argc, char* argv[]){
         }
 
         window.render(player);
+
+        // Pause screen
+        if (pause){
+            textRenderer.renderText("Pause", color, 400, 350);
+        }
+
         window.display();
 
     }
@@ -104,7 +138,6 @@ int main(int argc, char* argv[]){
 
     return 0;
 }
-
 
 
 bool checkCollision(Entity& entity1, std::vector<Entity>& entities){
@@ -131,4 +164,5 @@ bool checkCollision(Entity& entity1, std::vector<Entity>& entities){
     }
     return false;
 }
+
 
