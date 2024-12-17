@@ -34,7 +34,8 @@ int main(int argc, char* argv[]){
     SDL_Texture* sprites = window.loadTexture("/home/tyler/Desktop/sdl2game/Images/characters.png");
     SDL_Texture* tiles = window.loadTexture("/home/tyler/Desktop/sdl2game/Images/basictiles.png");
     
-    textRenderer textRenderer(renderer, "/home/tyler/Desktop/sdl2game/Images/ARCADECLASSIC.TTF", 100);
+    textRenderer titleFont(renderer, "/home/tyler/Desktop/sdl2game/Images/ARCADECLASSIC.TTF", 100);
+    textRenderer regFont(renderer, "/home/tyler/Desktop/sdl2game/Images/ARCADECLASSIC.TTF", 36);
     SDL_Color color = {255, 255, 255};
 
     Tilemap tilemap(16, 12, tiles);
@@ -110,12 +111,12 @@ int main(int argc, char* argv[]){
                     if (player.getX() == 0 && player.getY() == 9){
                         std::cout << "arrived\n";
                     }
-                case SDL_MOUSEBUTTONDOWN:
+               case SDL_MOUSEBUTTONDOWN:
 
                     if (event.type == SDL_MOUSEBUTTONDOWN){
                         int mouseX, mouseY;
                         SDL_GetMouseState(&mouseX, &mouseY);
-                        if (IsMouseOverButton(mouseX, mouseY, renderText)){
+                        if (IsMouseOverButton(mouseX, mouseY, titleFont)){
                             std::cout << "Button clicked\n";
                         }
                     }
@@ -142,9 +143,8 @@ int main(int argc, char* argv[]){
 
         // Pause screen
         if (pause){
-            textRenderer.renderText("Pause", color, 365, 325);
+            titleFont.renderText("Pause", color, 365, 325);
         }
-
 
         window.display();
 
@@ -184,9 +184,9 @@ bool checkCollision(Entity& entity1, std::vector<Entity>& entities){
     return false;
 }
 
-
+// Check text.cpp for ways of getting the x y w h from the textRect (hiddent within class currently)
 
 bool IsMouseOverButton(int mouseX, int mouseY, textRenderer& text){
-    return mouseX >= text.x && mouseX <= text.x + text.w &&
-           mouseY >= text.y && mouseY <= text.y + text.h;
+    return mouseX >= text.getX() && mouseX <= text.getX() + text.getW() &&
+           mouseY >= text.getY() && mouseY <= text.getY() + text.getH();
 }

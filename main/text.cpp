@@ -32,7 +32,20 @@ void textRenderer::renderText(const std::string& text, SDL_Color color, int x, i
 
     SDL_FreeSurface(textSurface);
 
-    SDL_Rect renderQuad = {x, y, textWidth, textHeight};
-    SDL_RenderCopy(renderer, texture, nullptr, &renderQuad);
+    t_rect = {x, y, textWidth, textHeight};
+    SDL_RenderCopy(renderer, texture, nullptr, &t_rect);
     SDL_DestroyTexture(texture);
+
+}
+int textRenderer::getX(){
+    return t_rect.x;
+}
+int textRenderer::getY(){
+    return t_rect.y;
+}
+int textRenderer::getW(){
+    return t_rect.w;
+}
+int textRenderer::getH(){
+    return t_rect.h;
 }
