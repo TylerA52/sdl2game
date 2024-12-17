@@ -35,6 +35,7 @@ int main(int argc, char* argv[]){
     SDL_Texture* tiles = window.loadTexture("/home/tyler/Desktop/sdl2game/Images/basictiles.png");
     
     textRenderer titleFont(renderer, "/home/tyler/Desktop/sdl2game/Images/ARCADECLASSIC.TTF", 100);
+    textRenderer exitButton(renderer, "/home/tyler/Desktop/sdl2game/Images/ARCADECLASSIC.TTF", 36);
     textRenderer regFont(renderer, "/home/tyler/Desktop/sdl2game/Images/ARCADECLASSIC.TTF", 36);
     SDL_Color color = {255, 255, 255};
 
@@ -116,8 +117,10 @@ int main(int argc, char* argv[]){
                     if (event.type == SDL_MOUSEBUTTONDOWN){
                         int mouseX, mouseY;
                         SDL_GetMouseState(&mouseX, &mouseY);
-                        if (IsMouseOverButton(mouseX, mouseY, titleFont)){
-                            std::cout << "Button clicked\n";
+                        if (IsMouseOverButton(mouseX, mouseY, exitButton)){
+                            if (pause){
+                                pause = false;
+                            }
                         }
                     }
 
@@ -143,6 +146,7 @@ int main(int argc, char* argv[]){
 
         // Pause screen
         if (pause){
+            exitButton.renderText("Exit", color, 50, 50);
             titleFont.renderText("Pause", color, 365, 325);
         }
 
